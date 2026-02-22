@@ -2,41 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/constants/app_colors.dart';
-import '../../data/models/aya_model.dart';
-import '../cubit/settings_cubit.dart';
-import 'diacritic_highlight_text.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../data/models/aya_model.dart';
+import '../../../cubit/settings_cubit/settings_cubit.dart';
+import '../../../cubit/settings_cubit/settings_states.dart';
+import 'aya_badge.dart';
+import '../diacritic_highlight_text.dart';
+import 'meta_chips.dart';
 
-class AyahCardWidget extends StatelessWidget {
+class CardBody extends StatelessWidget {
   final AyaModel aya;
-
   final List<String> highlightTerms;
-
   final bool isHighlight;
 
-  const AyahCardWidget({
+  const CardBody({
     super.key,
-    required this.aya,
-    this.highlightTerms = const [],
-    this.isHighlight = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _CardBody(
-      aya: aya,
-      highlightTerms: highlightTerms,
-      isHighlight: isHighlight,
-    );
-  }
-}
-
-class _CardBody extends StatelessWidget {
-  final AyaModel aya;
-  final List<String> highlightTerms;
-  final bool isHighlight;
-
-  const _CardBody({
     required this.aya,
     required this.highlightTerms,
     required this.isHighlight,
@@ -54,7 +34,9 @@ class _CardBody extends StatelessWidget {
 
         final baseStyle = TextStyle(
           fontFamily: font,
-          color: isHighlight ? AppColors.textPrimary : AppColors.textPrimary.withAlpha(220),
+          color: isHighlight
+              ? AppColors.textPrimary
+              : AppColors.textPrimary.withAlpha(220),
           fontSize: baseFs,
           height: 2.0,
           fontWeight: isHighlight ? FontWeight.w600 : FontWeight.w400,
@@ -81,7 +63,9 @@ class _CardBody extends StatelessWidget {
             color: isHighlight ? AppColors.highlightBg : AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isHighlight ? AppColors.highlightBorder : AppColors.divider,
+              color: isHighlight
+                  ? AppColors.highlightBorder
+                  : AppColors.divider,
               width: isHighlight ? 1.5 : 0.8,
             ),
             boxShadow: isHighlight
@@ -102,14 +86,16 @@ class _CardBody extends StatelessWidget {
                 Row(
                   textDirection: TextDirection.rtl,
                   children: [
-                    _AyaBadge(number: aya.ayaId, highlighted: isHighlight),
+                    AyaBadge(number: aya.ayaId, highlighted: isHighlight),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'آية ${aya.ayaId}',
                         textDirection: TextDirection.rtl,
                         style: GoogleFonts.amiri(
-                          color: isHighlight ? AppColors.accent : AppColors.textSecondary,
+                          color: isHighlight
+                              ? AppColors.accent
+                              : AppColors.textSecondary,
                           fontSize: 13,
                           fontWeight: isHighlight
                               ? FontWeight.bold
@@ -144,7 +130,7 @@ class _CardBody extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                _MetaChips(aya: aya),
+                MetaChips(aya: aya),
 
                 const SizedBox(height: 10),
               ],
@@ -154,78 +140,4 @@ class _CardBody extends StatelessWidget {
       },
     );
   }
-}
-
-class _AyaBadge extends StatelessWidget {
-  final int number;
-  final bool highlighted;
-  const _AyaBadge({required this.number, required this.highlighted});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: highlighted
-              ? [const Color(0xFFD4AF37), const Color(0xFF8B6914)]
-              : [const Color(0xFF2A3D55), const Color(0xFF1A2840)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: highlighted
-            ? [BoxShadow(color: AppColors.accent.withAlpha(77), blurRadius: 8)]
-            : [],
-      ),
-      child: Center(
-        child: Text(
-          '$number',
-          style: TextStyle(
-            color: highlighted ? Colors.white : AppColors.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MetaChips extends StatelessWidget {
-  final AyaModel aya;
-  const _MetaChips({required this.aya});
-
-  @override
-  Widget build(BuildContext context) {
-    final chips = <String>[
-      if (aya.juzId != null) 'الجزء ${aya.juzId}',
-      if (aya.hizbId != null) 'الحزب ${aya.hizbId}',
-      if (aya.pageId != null) 'صفحة ${aya.pageId}',
-      if (aya.suraTypeEn != null) aya.suraTypeEn!,
-    ];
-    if (chips.isEmpty) return const SizedBox.shrink();
-
-    return Wrap(
-      spacing: 6,
-      runSpacing: 4,
-      alignment: WrapAlignment.end,
-      children: chips.map(_chip).toList(),
-    );
-  }
-
-  Widget _chip(String label) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-    decoration: BoxDecoration(
-      color: AppColors.surfaceHigh,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.divider, width: 0.6),
-    ),
-    child: Text(
-      label,
-      textDirection: TextDirection.rtl,
-      style: GoogleFonts.amiri(color: AppColors.textSecondary, fontSize: 11),
-    ),
-  );
 }

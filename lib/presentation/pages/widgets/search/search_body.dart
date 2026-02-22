@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/search_cubit.dart';
+import '../../../cubit/search_cubit/search_cubit.dart';
+import '../../../cubit/search_cubit/search_states.dart';
 import 'search_prompt_view.dart';
 import 'search_loading_view.dart';
 import 'no_result_view.dart';

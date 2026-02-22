@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
-import '../../core/arabic/arabic_normalizer.dart';
+import '../../../core/arabic/arabic_normalizer.dart';
 
 class DiacriticHighlightText extends StatelessWidget {
   final String originalText;

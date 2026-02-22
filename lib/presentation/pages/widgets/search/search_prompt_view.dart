@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import 'hint_chip.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../aya/hint_chip.dart';
 
 class SearchPromptView extends StatelessWidget {
   const SearchPromptView({super.key});

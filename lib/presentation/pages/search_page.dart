@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/constants/app_colors.dart';
-import '../cubit/search_cubit.dart';
-import 'widgets/search_header.dart';
-import 'widgets/search_input_field.dart';
-import 'widgets/search_body.dart';
+import '../cubit/search_cubit/search_cubit.dart';
+import 'widgets/search/search_header.dart';
+import 'widgets/search/search_input_field.dart';
+import 'widgets/search/search_body.dart';
 
 const _kDebounceDelay = Duration(milliseconds: 320);
 

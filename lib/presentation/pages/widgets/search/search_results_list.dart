@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/repositories/quran_repository.dart';
-import 'aya_card.dart';
+import '../../../../../data/repositories/quran_repository.dart';
+import '../aya/aya_card.dart';
 
 class SearchResultsList extends StatelessWidget {
   final List<SearchResultItem> results;

@@ -7,8 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/app_colors.dart';
 import 'data/database/database_helper.dart';
 import 'data/repositories/quran_repository.dart';
-import 'presentation/cubit/search_cubit.dart';
-import 'presentation/cubit/settings_cubit.dart';
+import 'presentation/cubit/search_cubit/search_cubit.dart';
+import 'presentation/cubit/settings_cubit/settings_cubit.dart';
+import 'presentation/cubit/settings_cubit/settings_states.dart';
 import 'presentation/pages/search_page.dart';
 
 void main() async {
