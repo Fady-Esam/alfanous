@@ -1,9 +1,5 @@
-library;
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../data/models/aya_model.dart';
 import '../../data/repositories/quran_repository.dart';
 
 sealed class SearchState extends Equatable {
@@ -27,18 +23,16 @@ final class SearchLoading extends SearchState {
 }
 
 final class SearchSuccess extends SearchState {
-  final List<AyaModel> results;
-
-  final String normalizedQuery;
+  final List<SearchResultItem> results;
 
   int get count => results.length;
 
   bool get isEmpty => results.isEmpty;
 
-  const SearchSuccess({required this.results, required this.normalizedQuery});
+  const SearchSuccess({required this.results});
 
   @override
-  List<Object?> get props => [results, normalizedQuery];
+  List<Object?> get props => [results];
 }
 
 final class SearchError extends SearchState {
@@ -71,26 +65,15 @@ class SearchCubit extends Cubit<SearchState> {
 
     try {
       final results = await _repository.searchAyat(trimmed);
-
-      final normalizedQuery = _normalizeForHighlight(trimmed);
-
-      emit(SearchSuccess(results: results, normalizedQuery: normalizedQuery));
-    } catch (e/*, stackTrace*/) {
-      //print('[SearchCubit] Search failed: $e\n$stackTrace');
+      emit(SearchSuccess(results: results));
+    } catch (e, stackTrace) {
+      print('[SearchCubit] Search failed: $e\n$stackTrace');
 
       emit(SearchError(message: _humanReadableError(e), exception: e));
     }
   }
 
   void clear() => emit(const SearchInitial());
-
-  String _normalizeForHighlight(String query) {
-    try {
-      return query.trim();
-    } catch (_) {
-      return query;
-    }
-  }
 
   String _humanReadableError(Object e) {
     if (e is FormatException) {

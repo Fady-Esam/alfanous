@@ -1,15 +1,17 @@
-library;
+
 
 abstract final class ArabicConstants {
   static const String arabicComma = '\u060C';
   static const String semicolon = '\u061B';
   static const String question = '\u061F';
+
   static const String hamza = '\u0621';
   static const String alefMadda = '\u0622';
   static const String alefHamzaAbove = '\u0623';
   static const String wawHamza = '\u0624';
   static const String alefHamzaBelow = '\u0625';
   static const String yehHamza = '\u0626';
+
   static const String alef = '\u0627';
   static const String beh = '\u0628';
   static const String tehMarbuta = '\u0629';
@@ -41,9 +43,11 @@ abstract final class ArabicConstants {
   static const String waw = '\u0648';
   static const String alefMaksura = '\u0649';
   static const String yeh = '\u064A';
+
   static const String maddaAbove = '\u0653';
   static const String hamzaAbove = '\u0654';
   static const String hamzaBelow = '\u0655';
+
   static const String fathatan = '\u064B';
   static const String dammatan = '\u064C';
   static const String kasratan = '\u064D';
@@ -52,6 +56,7 @@ abstract final class ArabicConstants {
   static const String kasra = '\u0650';
   static const String shadda = '\u0651';
   static const String sukun = '\u0652';
+
   static const String miniAlef = '\u0670';
   static const String alefWasla = '\u0671';
   static const String smallAlef = '\u0670';
@@ -61,6 +66,7 @@ abstract final class ArabicConstants {
   static const String smallHighLigature = '\u06D6';
   static const String fullStop = '\u06D4';
   static const String byteOrderMark = '\uFEFF';
+
   static const String arabicZero = '\u0660';
   static const String arabicOne = '\u0661';
   static const String arabicTwo = '\u0662';
@@ -71,10 +77,15 @@ abstract final class ArabicConstants {
   static const String arabicSeven = '\u0667';
   static const String arabicEight = '\u0668';
   static const String arabicNine = '\u0669';
+
   static const String lamAlef = '\uFEFB';
+
   static const String lamAlefHamzaAbove = '\uFEF7';
+
   static const String lamAlefHamzaBelow = '\uFEF9';
+
   static const String lamAlefMaddaAbove = '\uFEF5';
+
   static const Set<String> tashkeel = {
     fathatan,
     dammatan,
@@ -97,7 +108,9 @@ abstract final class ArabicConstants {
   };
 
   static const Set<String> shortHarakat = {fatha, damma, kasra, sukun};
+
   static const Set<String> tanwin = {fathatan, dammatan, kasratan};
+
   static const Set<String> ligatures = {
     lamAlef,
     lamAlefHamzaAbove,
@@ -126,9 +139,13 @@ abstract final class ArabicConstants {
   };
 
   static const Set<String> weak = {alef, waw, yeh, alefMaksura};
+
   static const Set<String> yehLike = {yeh, yehHamza, alefMaksura, smallYeh};
+
   static const Set<String> wawLike = {waw, wawHamza, smallWaw};
+
   static const Set<String> tehLike = {teh, tehMarbuta};
+
   static const Set<String> small = {smallAlef, smallWaw, smallYeh};
 
   static const String letters =

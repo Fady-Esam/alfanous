@@ -1,4 +1,3 @@
-library;
 
 abstract final class ArabicNormalizer {
   static final RegExp _tashkeelPattern = RegExp(
@@ -20,10 +19,12 @@ abstract final class ArabicNormalizer {
 
   static final RegExp _hamzatPattern = RegExp(r'[\u0624\u0626]', unicode: true);
 
-  static final RegExp _lamAlefPattern = RegExp(
-    r'[\uFEF5\uFEF7\uFEF9\uFEFB]',
-    unicode: true,
-  );
+  static const Map<String, String> _lamAlefMap = {
+    '\uFEFB': '\u0644\u0627',
+    '\uFEF7': '\u0644\u0623',
+    '\uFEF9': '\u0644\u0625',
+    '\uFEF5': '\u0644\u0622',
+  };
 
   static final RegExp _uthmaniSymbolsPattern = RegExp(
     r'[\u0670\u06DC\u06DF\u06E0\u06E2\u06E3\u06E5\u06E6\u06E8\u06EA\u06EB\u06EC\u06ED]',
@@ -60,7 +61,11 @@ abstract final class ArabicNormalizer {
 
   static String normalizeLamAlef(String text) {
     if (text.isEmpty) return text;
-    return text.replaceAll(_lamAlefPattern, '\u0644\u0627');
+
+    _lamAlefMap.forEach((ligature, expansion) {
+      text = text.replaceAll(ligature, expansion);
+    });
+    return text;
   }
 
   static String normalizeSpellerrors(String text) {
@@ -77,6 +82,8 @@ abstract final class ArabicNormalizer {
 
   static String normalize(String text) {
     if (text.isEmpty) return text;
+
+    text = normalizeUthmaniSymbols(text);
     text = normalizeLamAlef(text);
     text = stripTatweel(text);
     text = stripTashkeel(text);
@@ -85,14 +92,31 @@ abstract final class ArabicNormalizer {
     return text;
   }
 
-  static String normalizeUthmani(String text) {
+  static String normalizeQuery(String query) {
+    if (query.isEmpty) return query;
+
+    query = query.replaceAll('\u061F', '?');
+    return normalize(query);
+  }
+
+  static String normalizeUthmani(String text) => normalize(text);
+
+  static String fixJalalaHighlighting(String text) {
     if (text.isEmpty) return text;
-    text = normalizeUthmaniSymbols(text);
-    text = normalizeLamAlef(text);
-    text = stripTatweel(text);
-    text = stripTashkeel(text);
-    text = normalizeHamza(text);
-    text = normalizeSpellerrors(text);
-    return text;
+    return text
+        .replaceAll('\u0644\u0651\u0647', '\u0644\u0651\u0640\u0647')
+        .replaceAll('\u0644\u0644\u0647', '\u0627\u0644\u0644\u0647');
+  }
+
+  static List<int> buildOffsetMap(String original, String stripped) {
+    final map = <int>[];
+    var si = 0;
+    for (var oi = 0; oi < original.length && si < stripped.length; oi++) {
+      if (original[oi] == stripped[si]) {
+        map.add(oi);
+        si++;
+      }
+    }
+    return map;
   }
 }
