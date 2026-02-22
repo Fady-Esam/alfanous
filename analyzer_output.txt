@@ -1,0 +1,5 @@
+[info] Library names are not necessary (E:\alfanous\lib\data\repositories\quran_repository.dart:1:9)
+[info] The member '_db' overrides an inherited member but isn't annotated with '@override' (E:\alfanous\lib\data\repositories\quran_repository.dart:23:24)
+[info] The member '_mapRows' overrides an inherited member but isn't annotated with '@override' (E:\alfanous\lib\data\repositories\quran_repository.dart:25:18)
+[info] Don't invoke 'print' in production code (E:\alfanous\lib\presentation\cubit\search_cubit.dart:70:7)
+[error] The name 'MyApp' isn't a class (E:\alfanous\test\widget_test.dart:16:35)

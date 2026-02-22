@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'core/constants/app_colors.dart';
 import 'data/database/database_helper.dart';
 import 'data/repositories/quran_repository.dart';
 import 'presentation/cubit/search_cubit.dart';
@@ -81,20 +82,10 @@ class AlfanousApp extends StatelessWidget {
   ThemeData _buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
 
-    const darkBg = Color(0xFF0F1923);
-    const darkSurface = Color(0xFF1A2840);
-    const accent = Color(0xFFD4AF37);
-    const darkText = Color(0xFFF0E6CC);
-    const darkTextSec = Color(0xFF8EA8C3);
-    const lightBg = Color(0xFFF5F0E8);
-    const lightSurface = Colors.white;
-    const lightText = Color(0xFF1A1A2E);
-    const lightTextSec = Color(0xFF5A6A7A);
-
-    final bg = isDark ? darkBg : lightBg;
-    final surf = isDark ? darkSurface : lightSurface;
-    final text = isDark ? darkText : lightText;
-    final textS = isDark ? darkTextSec : lightTextSec;
+    final bg = isDark ? AppColors.background : AppColors.lightBg;
+    final surf = isDark ? AppColors.surface : AppColors.lightSurface;
+    final text = isDark ? AppColors.textPrimary : AppColors.lightText;
+    final textS = isDark ? AppColors.textSecondary : AppColors.lightTextSec;
 
     final amiriBase = GoogleFonts.amiriTextTheme(
       isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
@@ -106,9 +97,9 @@ class AlfanousApp extends StatelessWidget {
       scaffoldBackgroundColor: bg,
       colorScheme: ColorScheme(
         brightness: brightness,
-        primary: accent,
+        primary: AppColors.accent,
         onPrimary: Colors.white,
-        secondary: accent,
+        secondary: AppColors.accent,
         onSecondary: Colors.white,
         surface: surf,
         onSurface: text,
@@ -138,7 +129,9 @@ class AlfanousApp extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: accent),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: AppColors.accent,
+      ),
       splashFactory: InkRipple.splashFactory,
     );
   }

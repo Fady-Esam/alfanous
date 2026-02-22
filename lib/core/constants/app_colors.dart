@@ -1,4 +1,5 @@
-import 'dart:ui';
+
+import 'package:flutter/material.dart';
 
 class AppColors {
   AppColors._();
@@ -20,4 +21,9 @@ class AppColors {
 
   static const divider = Color(0xFF2A3D55);
   static const error = Color(0xFFEF5350);
+
+  static const lightBg = Color(0xFFF5F0E8);
+  static const lightSurface = Colors.white;
+  static const lightText = Color(0xFF1A1A2E);
+  static const lightTextSec = Color(0xFF5A6A7A);
 }
