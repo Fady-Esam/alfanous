@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
 
+
 class AyaBadge extends StatelessWidget {
   final int number;
   final bool highlighted;

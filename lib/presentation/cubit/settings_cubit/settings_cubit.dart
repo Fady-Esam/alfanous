@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/offline_audio_service.dart';
 import '../../../core/services/settings_service.dart';
 import 'settings_states.dart';
 
@@ -21,6 +22,7 @@ class SettingsCubit extends Cubit<SettingsState> {
           currentReciterSizeBytes: 0,
         ),
       );
+      await refreshStorageSize();
     } catch (e) {
       debugPrint('[SettingsCubit] init failed, using defaults: $e');
     }
@@ -36,9 +38,17 @@ class SettingsCubit extends Cubit<SettingsState> {
     if (state.selectedReciter == reciter) return;
     emit(state.copyWith(selectedReciter: reciter));
     await _service.setSelectedReciter(reciter);
+    await refreshStorageSize();
   }
 
+  Future<void> refreshStorageSize() async {
+    final size = await OfflineAudioService.instance.calculateReciterSize(
+      state.selectedReciter,
+    );
+    emit(state.copyWith(currentReciterSizeBytes: size));
+  }
 
+  Future<void> recalculateCurrentStorage() => refreshStorageSize();
 
   Future<void> adjustFontSize(double step) async {
     final next = (state.fontSizeMultiplier + step).clamp(0.7, 2.0);
@@ -52,5 +62,6 @@ class SettingsCubit extends Cubit<SettingsState> {
       _service.setFontSizeMultiplier(defaults.fontSizeMultiplier),
       _service.setSelectedReciter(defaults.selectedReciter),
     ]);
+    await refreshStorageSize();
   }
 }

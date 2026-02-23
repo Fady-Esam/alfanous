@@ -14,7 +14,12 @@ class MetaChips extends StatelessWidget {
       if (aya.juzId != null) 'الجزء ${aya.juzId}',
       if (aya.hizbId != null) 'الحزب ${aya.hizbId}',
       if (aya.pageId != null) 'صفحة ${aya.pageId}',
-      if (aya.suraTypeEn != null) aya.suraTypeEn!,
+      if (aya.suraTypeEn != null)
+        aya.suraTypeEn!.toLowerCase() == 'meccan'
+            ? 'مكية'
+            : aya.suraTypeEn!.toLowerCase() == 'medinan'
+            ? 'مدنية'
+            : aya.suraTypeEn!,
     ];
     if (chips.isEmpty) return const SizedBox.shrink();
 

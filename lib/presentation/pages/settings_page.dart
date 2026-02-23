@@ -7,7 +7,9 @@ import '../cubit/settings_cubit/settings_cubit.dart';
 import '../cubit/settings_cubit/settings_states.dart';
 import 'widgets/setting/about_tile.dart';
 import 'widgets/setting/fontsize_slider.dart';
+import 'widgets/setting/reciter_picker.dart';
 import 'widgets/setting/section_header.dart';
+import 'widgets/setting/storage_management_tile.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -52,6 +54,14 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               SectionHeader(label: 'المظهر', icon: Icons.palette_outlined),
               FontSizeSlider(value: settings.fontSizeMultiplier),
+
+              const SizedBox(height: 24),
+
+              // ── 2. Audio ───────────────────────────────────────────────
+              SectionHeader(label: 'الصوت', icon: Icons.headphones_outlined),
+              ReciterPicker(current: settings.selectedReciter),
+              const SizedBox(height: 12),
+              StorageManagementTile(reciter: settings.selectedReciter),
 
               const SizedBox(height: 24),
 

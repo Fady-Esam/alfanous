@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../data/models/aya_model.dart';
+import '../../../cubit/audio_cubit/audio_cubit.dart';
 import 'card_body.dart';
 
 class AyahCardWidget extends StatelessWidget {
@@ -18,14 +20,14 @@ class AyahCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardBody(
-      aya: aya,
-      highlightTerms: highlightTerms,
-      isHighlight: isHighlight,
+    return BlocProvider<AudioCubit>(
+      create: (_) =>
+          AudioCubit(sura: aya.suraId, aya: aya.ayaId)..checkDownloaded(),
+      child: CardBody(
+        aya: aya,
+        highlightTerms: highlightTerms,
+        isHighlight: isHighlight,
+      ),
     );
   }
 }
-
-
-
-

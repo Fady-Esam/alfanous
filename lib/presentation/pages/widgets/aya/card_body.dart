@@ -8,6 +8,7 @@ import '../../../cubit/favorite_cubit/favorites_cubit.dart';
 import '../../../cubit/favorite_cubit/favorites_states.dart';
 import '../../../cubit/settings_cubit/settings_cubit.dart';
 import '../../../cubit/settings_cubit/settings_states.dart';
+import '../audio/audio_bar.dart';
 import 'aya_badge.dart';
 import 'diacritic_highlight_text.dart';
 import 'meta_chips.dart';
@@ -147,6 +148,9 @@ class CardBody extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 MetaChips(aya: aya),
+                const SizedBox(height: 10),
+
+                AudioBar(sura: aya.suraId, ayaId: aya.ayaId),
               ],
             ),
           ),
