@@ -1,15 +1,15 @@
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'core/constants/app_colors.dart';
 import 'data/database/database_helper.dart';
 import 'data/repositories/quran_repository.dart';
 import 'presentation/cubit/search_cubit/search_cubit.dart';
 import 'presentation/cubit/settings_cubit/settings_cubit.dart';
-import 'presentation/cubit/settings_cubit/settings_states.dart';
 import 'presentation/pages/search_page.dart';
 
 void main() async {
@@ -45,7 +45,9 @@ class AlfanousApp extends StatelessWidget {
     final repo = QuranRepository(dbHelper: DatabaseHelper.instance);
 
     return MultiRepositoryProvider(
-      providers: [RepositoryProvider<QuranRepository>.value(value: repo)],
+      providers: [
+        RepositoryProvider<QuranRepository>.value(value: repo),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<SettingsCubit>.value(value: settingsCubit),
@@ -53,86 +55,76 @@ class AlfanousApp extends StatelessWidget {
           BlocProvider<SearchCubit>(
             create: (_) => SearchCubit(repository: repo),
           ),
+
         ],
-        child: BlocBuilder<SettingsCubit, SettingsState>(
-          buildWhen: (prev, curr) => prev.themeMode != curr.themeMode,
-          builder: (context, settings) {
-            return MaterialApp(
-              title: 'الفانوس — البحث القرآني',
-              debugShowCheckedModeBanner: false,
-              themeMode: settings.themeMode,
-              theme: _buildTheme(Brightness.light),
-              darkTheme: _buildTheme(Brightness.dark),
+        child: MaterialApp(
+          title: 'الفانوس — البحث القرآني',
+          debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.dark,
+          theme: _buildTheme(),
 
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('ar', ''), Locale('en', '')],
-              locale: const Locale('ar', ''),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('ar', ''), Locale('en', '')],
+          locale: const Locale('ar', ''),
 
-              home: const SearchPage(),
-            );
-          },
+          home: const SearchPage(),
         ),
       ),
     );
   }
 
-  ThemeData _buildTheme(Brightness brightness) {
-    final isDark = brightness == Brightness.dark;
+  ThemeData _buildTheme() {
+    const darkBg = Color(0xFF0F1923);
+    const darkSurface = Color(0xFF1A2840);
+    const accent = Color(0xFFD4AF37);
+    const darkText = Color(0xFFF0E6CC);
+    const darkTextSec = Color(0xFF8EA8C3);
 
-    final bg = isDark ? AppColors.background : AppColors.lightBg;
-    final surf = isDark ? AppColors.surface : AppColors.lightSurface;
-    final text = isDark ? AppColors.textPrimary : AppColors.lightText;
-    final textS = isDark ? AppColors.textSecondary : AppColors.lightTextSec;
-
-    final amiriBase = GoogleFonts.amiriTextTheme(
-      isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
-    );
+    final amiriBase = GoogleFonts.amiriTextTheme(ThemeData.dark().textTheme);
 
     return ThemeData(
       useMaterial3: true,
-      brightness: brightness,
-      scaffoldBackgroundColor: bg,
-      colorScheme: ColorScheme(
-        brightness: brightness,
-        primary: AppColors.accent,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: darkBg,
+      canvasColor: darkBg,
+      colorScheme: const ColorScheme.dark(
+        primary: accent,
         onPrimary: Colors.white,
-        secondary: AppColors.accent,
+        secondary: accent,
         onSecondary: Colors.white,
-        surface: surf,
-        onSurface: text,
-        error: const Color(0xFFEF5350),
+        surface: darkSurface,
+        onSurface: darkText,
+        error: Color(0xFFEF5350),
         onError: Colors.white,
       ),
       textTheme: amiriBase.copyWith(
-        bodyLarge: amiriBase.bodyLarge?.copyWith(color: text),
-        bodyMedium: amiriBase.bodyMedium?.copyWith(color: text),
-        bodySmall: amiriBase.bodySmall?.copyWith(color: textS),
+        bodyLarge: amiriBase.bodyLarge?.copyWith(color: darkText),
+        bodyMedium: amiriBase.bodyMedium?.copyWith(color: darkText),
+        bodySmall: amiriBase.bodySmall?.copyWith(color: darkTextSec),
         titleLarge: amiriBase.titleLarge?.copyWith(
-          color: text,
+          color: darkText,
           fontWeight: FontWeight.bold,
         ),
       ),
       cardTheme: CardThemeData(
-        color: surf,
+        color: darkSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surf,
-        hintStyle: GoogleFonts.amiri(color: textS),
+        fillColor: darkSurface,
+        hintStyle: GoogleFonts.amiri(color: darkTextSec),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.accent,
-      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: accent),
       splashFactory: InkRipple.splashFactory,
     );
   }

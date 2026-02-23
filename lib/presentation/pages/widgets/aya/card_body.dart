@@ -7,7 +7,7 @@ import '../../../../data/models/aya_model.dart';
 import '../../../cubit/settings_cubit/settings_cubit.dart';
 import '../../../cubit/settings_cubit/settings_states.dart';
 import 'aya_badge.dart';
-import '../diacritic_highlight_text.dart';
+import 'diacritic_highlight_text.dart';
 import 'meta_chips.dart';
 
 class CardBody extends StatelessWidget {
@@ -15,8 +15,7 @@ class CardBody extends StatelessWidget {
   final List<String> highlightTerms;
   final bool isHighlight;
 
-  const CardBody({
-    super.key,
+  const CardBody({super.key, 
     required this.aya,
     required this.highlightTerms,
     required this.isHighlight,
@@ -26,24 +25,18 @@ class CardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsState>(
       buildWhen: (prev, curr) =>
-          prev.fontType != curr.fontType ||
           prev.fontSizeMultiplier != curr.fontSizeMultiplier,
       builder: (context, settings) {
         final baseFs = 20.0 * settings.fontSizeMultiplier;
-        final font = settings.fontType;
 
-        final baseStyle = TextStyle(
-          fontFamily: font,
-          color: isHighlight
-              ? AppColors.textPrimary
-              : AppColors.textPrimary.withAlpha(220),
+        final baseStyle = GoogleFonts.amiri(
+          color: isHighlight ? AppColors.textPrimary : AppColors.textPrimary.withAlpha(220),
           fontSize: baseFs,
           height: 2.0,
           fontWeight: isHighlight ? FontWeight.w600 : FontWeight.w400,
         );
 
-        final hlStyle = TextStyle(
-          fontFamily: font,
+        final hlStyle = GoogleFonts.amiri(
           color: AppColors.accent,
           fontSize: baseFs,
           height: 2.0,
@@ -63,9 +56,7 @@ class CardBody extends StatelessWidget {
             color: isHighlight ? AppColors.highlightBg : AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isHighlight
-                  ? AppColors.highlightBorder
-                  : AppColors.divider,
+              color: isHighlight ? AppColors.highlightBorder : AppColors.divider,
               width: isHighlight ? 1.5 : 0.8,
             ),
             boxShadow: isHighlight
@@ -90,25 +81,17 @@ class CardBody extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'آية ${aya.ayaId}',
+                        'سورة ${aya.suraName ?? ''} - آية ${aya.ayaId}',
                         textDirection: TextDirection.rtl,
                         style: GoogleFonts.amiri(
-                          color: isHighlight
-                              ? AppColors.accent
-                              : AppColors.textSecondary,
-                          fontSize: 13,
+                          color: isHighlight ? AppColors.accent : AppColors.textSecondary,
+                          fontSize: 14,
                           fontWeight: isHighlight
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
                       ),
                     ),
-                    if (isHighlight)
-                      const Icon(
-                        Icons.bookmark_rounded,
-                        color: AppColors.accent,
-                        size: 18,
-                      ),
                   ],
                 ),
 
