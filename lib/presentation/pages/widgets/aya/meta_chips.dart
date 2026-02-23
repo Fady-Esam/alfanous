@@ -6,7 +6,7 @@ import '../../../../data/models/aya_model.dart';
 
 class MetaChips extends StatelessWidget {
   final AyaModel aya;
-  const MetaChips({required this.aya});
+  const MetaChips({super.key, required this.aya});
 
   @override
   Widget build(BuildContext context) {

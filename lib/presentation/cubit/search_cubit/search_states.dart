@@ -25,14 +25,34 @@ final class SearchLoading extends SearchState {
 final class SearchSuccess extends SearchState {
   final List<SearchResultItem> results;
 
-  int get count => results.length;
+  final int totalCount;
+
+  final bool hasReachedMax;
+
+  final bool isFetchingMore;
+
+  final String query;
+
+  int get loadedCount => results.length;
 
   bool get isEmpty => results.isEmpty;
 
-  const SearchSuccess({required this.results});
+  const SearchSuccess({
+    required this.results,
+    required this.totalCount,
+    required this.hasReachedMax,
+    required this.isFetchingMore,
+    required this.query,
+  });
 
   @override
-  List<Object?> get props => [results];
+  List<Object?> get props => [
+    results,
+    totalCount,
+    hasReachedMax,
+    isFetchingMore,
+    query,
+  ];
 }
 
 final class SearchError extends SearchState {

@@ -6,7 +6,7 @@ import '../../../../../core/constants/app_colors.dart';
 class SearchInputField extends StatelessWidget {
   final Animation<double> barElevation;
   final TextEditingController searchController;
-  final FocusNode focusNode;
+  final FocusNode searchFocusNode;
   final ValueChanged<String> onSearchChanged;
   final VoidCallback onClearSearch;
 
@@ -14,7 +14,7 @@ class SearchInputField extends StatelessWidget {
     super.key,
     required this.barElevation,
     required this.searchController,
-    required this.focusNode,
+    required this.searchFocusNode,
     required this.onSearchChanged,
     required this.onClearSearch,
   });
@@ -42,7 +42,8 @@ class SearchInputField extends StatelessWidget {
         ),
         child: TextField(
           controller: searchController,
-          focusNode: focusNode,
+          focusNode: searchFocusNode,
+          autofocus: false,
           textDirection: TextDirection.rtl,
           textAlign: TextAlign.right,
           style: GoogleFonts.amiri(color: AppColors.textPrimary, fontSize: 18),

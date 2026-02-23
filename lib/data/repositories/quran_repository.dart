@@ -1,3 +1,5 @@
+library;
+
 import 'package:sqflite/sqflite.dart';
 
 import '../database/database_helper.dart';
@@ -33,8 +35,6 @@ final class _PhraseGroup extends _ExpandedGroup {
 
 class QuranRepository {
   final DatabaseHelper _dbHelper;
-
-  static const int _resultLimit = 50;
 
   QuranRepository({DatabaseHelper? dbHelper})
     : _dbHelper = dbHelper ?? DatabaseHelper.instance;
@@ -85,8 +85,66 @@ class QuranRepository {
     'يا',
   };
 
+  Future<int> getTotalSearchCount(String query) async {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return 0;
+
+    final rawTokens = RegExp(r'[^\s"]+|"[^"]*"')
+        .allMatches(trimmed)
+        .map((m) => m.group(0)!)
+        .where((t) => t.isNotEmpty)
+        .toList();
+
+    if (rawTokens.isEmpty) return 0;
+
+    final groups = <_ExpandedGroup>[];
+    for (final token in rawTokens) {
+      final group = await _expandToken(token);
+      if (group != null) groups.add(group);
+    }
+
+    if (groups.isEmpty) return 0;
+
+    final includeGroups = groups.whereType<_IncludeGroup>().toList();
+    if (includeGroups.isNotEmpty) {
+      final allStops = includeGroups.every(
+        (g) => g.words.every(_stopWords.contains),
+      );
+      if (allStops) return 0;
+    }
+
+    final matchExpr = _buildMatchExpression(groups);
+    final db = await _db;
+    try {
+      final rows = await db.rawQuery(
+        'SELECT COUNT(*) FROM aya_fts WHERE aya_fts MATCH ?',
+        [matchExpr],
+      );
+      return Sqflite.firstIntValue(rows) ?? 0;
+    } on DatabaseException catch (e) {
+      if (_isFtsQueryError(e)) {
+        final fallbackWord =
+            includeGroups.isNotEmpty && includeGroups.first.words.isNotEmpty
+            ? includeGroups.first.words.first
+            : '';
+        if (fallbackWord.isNotEmpty) {
+          final fallbackRows = await db.query(
+            'aya',
+            columns: ['COUNT(*)'],
+            where: 'normalized LIKE ?',
+            whereArgs: ['%$fallbackWord%'],
+          );
+          return Sqflite.firstIntValue(fallbackRows) ?? 0;
+        }
+      }
+      return 0;
+    }
+  }
+
   Future<List<SearchResultItem>> searchAyat(
     String query, {
+    int limit = 50,
+    int offset = 0,
     SortMode sort = SortMode.score,
   }) async {
     final trimmed = query.trim();
@@ -137,7 +195,7 @@ class QuranRepository {
         JOIN   aya_fts AS f ON a.gid = f.rowid
         WHERE  aya_fts MATCH ?
         $orderBy
-        LIMIT  $_resultLimit
+        LIMIT  $limit OFFSET $offset
         ''',
         [matchExpr],
       );
@@ -154,7 +212,11 @@ class QuranRepository {
             ? includeGroups.first.words.first
             : '';
         if (fallbackWord.isNotEmpty) {
-          final fallbackAyas = await _likeSearchFallback(fallbackWord);
+          final fallbackAyas = await _likeSearchFallback(
+            fallbackWord,
+            limit,
+            offset,
+          );
           return fallbackAyas
               .map(
                 (aya) =>
@@ -470,13 +532,18 @@ class QuranRepository {
 
   String _escapeWord(String word) => word.replaceAll('"', '""');
 
-  Future<List<AyaModel>> _likeSearchFallback(String normalized) async {
+  Future<List<AyaModel>> _likeSearchFallback(
+    String normalized,
+    int limit,
+    int offset,
+  ) async {
     final db = await _db;
     final rows = await db.query(
       'aya',
       where: 'normalized LIKE ?',
       whereArgs: ['%$normalized%'],
-      limit: _resultLimit,
+      limit: limit,
+      offset: offset,
     );
     return _mapRows(rows);
   }

@@ -3,16 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../cubit/search_cubit/search_cubit.dart';
 import '../../../cubit/search_cubit/search_states.dart';
-import 'search_prompt_view.dart';
-import 'search_loading_view.dart';
 import 'no_result_view.dart';
-import 'search_results_list.dart';
 import 'search_error_view.dart';
+import 'search_loading_view.dart';
+import 'search_prompt_view.dart';
+import 'search_results_list.dart';
 
 const _kAnimationDuration = Duration(milliseconds: 350);
 
 class SearchBody extends StatelessWidget {
-  const SearchBody({super.key});
+  final FocusNode searchFocusNode;
+
+  const SearchBody({super.key, required this.searchFocusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +37,12 @@ class SearchBody extends StatelessWidget {
             SearchLoading() => const SearchLoadingView(
               key: ValueKey('loading'),
             ),
-            SearchSuccess(:final results) when results.isEmpty => NoResultsView(
-              key: const ValueKey('empty'),
-              query: results.isEmpty ? '' : '',
-            ),
+            SearchSuccess(:final results) when results.isEmpty =>
+              const NoResultsView(key: ValueKey('empty'), query: ''),
             SearchSuccess(:final results) => SearchResultsList(
               key: const ValueKey('results'),
               results: results,
+              searchFocusNode: searchFocusNode,
             ),
             SearchError(:final message) => SearchErrorView(
               key: const ValueKey('error'),

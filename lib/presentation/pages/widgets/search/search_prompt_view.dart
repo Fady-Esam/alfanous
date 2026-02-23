@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/constants/app_colors.dart';
-import '../aya/hint_chip.dart';
+import '../../../cubit/search_cubit/search_cubit.dart';
 
 class SearchPromptView extends StatelessWidget {
   const SearchPromptView({super.key});
@@ -53,13 +54,40 @@ class SearchPromptView extends StatelessWidget {
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: const [
-              HintChip('رحمة'),
-              HintChip('صبر'),
-              HintChip('الجنة'),
-              HintChip('النور'),
+              HintChip(text: 'رحمة'),
+              HintChip(text: 'صبر'),
+              HintChip(text: 'الجنة'),
+              HintChip(text: 'النور'),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class HintChip extends StatelessWidget {
+  final String text;
+  const HintChip({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.read<SearchCubit>().search(text),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceHigh,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.divider),
+        ),
+        child: Text(
+          text,
+          style: GoogleFonts.amiri(
+            color: AppColors.textSecondary,
+            fontSize: 15,
+          ),
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/repositories/quran_repository.dart';
@@ -20,7 +21,7 @@ class SurahCubit extends Cubit<SurahState> {
       final ayat = await _repository.getSurah(suraId);
       if (!isClosed) emit(SurahLoaded(ayat: ayat, suraId: suraId));
     } catch (e, st) {
-      print('[SurahCubit] loadSurah($suraId) failed: $e\n$st');
+      debugPrint('[SurahCubit] loadSurah($suraId) failed: $e\n$st');
       if (!isClosed) {
         emit(
           SurahError(

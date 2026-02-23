@@ -5,82 +5,99 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../cubit/search_cubit/search_cubit.dart';
 import '../../../cubit/search_cubit/search_states.dart';
+import '../../settings_page.dart';
+
+const _kAnimationDuration = Duration(milliseconds: 350);
 
 class SearchHeader extends StatelessWidget {
-  const SearchHeader({super.key});
+  final FocusNode searchFocusNode;
+
+  const SearchHeader({super.key, required this.searchFocusNode});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         textDirection: TextDirection.rtl,
         children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD4AF37), Color(0xFF8B6914)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.accent.withAlpha(102),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const Center(
-              child: Text(
-                'ق',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          IconButton(
+            icon: const Icon(Icons.settings_rounded),
+            color: AppColors.textSecondary,
+            iconSize: 24,
+            splashRadius: 24,
+            onPressed: () {
+              searchFocusNode.unfocus();
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsPage()));
+            },
+            tooltip: 'الإعدادات',
           ),
-          const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+
+          Row(
+            textDirection: TextDirection.rtl,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'الفانوس',
-                textDirection: TextDirection.rtl,
-                style: GoogleFonts.amiri(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                  letterSpacing: 0.5,
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFD4AF37), Color(0xFF8B6914)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accent.withAlpha(80),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Text(
+                    'ق',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                'البحث في القرآن الكريم',
-                textDirection: TextDirection.rtl,
-                style: GoogleFonts.amiri(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'الفانوس',
+                    textDirection: TextDirection.rtl,
+                    style: GoogleFonts.amiri(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          const Spacer(),
 
           BlocBuilder<SearchCubit, SearchState>(
             buildWhen: (prev, curr) =>
                 curr is SearchSuccess || prev is SearchSuccess,
             builder: (_, state) {
               if (state is! SearchSuccess || state.isEmpty) {
-                return const SizedBox.shrink();
+                return const SizedBox(width: 48);
               }
               return AnimatedOpacity(
                 opacity: 1.0,
-                duration: const Duration(milliseconds: 350),
+                duration: _kAnimationDuration,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -92,7 +109,7 @@ class SearchHeader extends StatelessWidget {
                     border: Border.all(color: AppColors.accent, width: 0.8),
                   ),
                   child: Text(
-                    '${state.count} آية',
+                    '${state.totalCount} آية',
                     style: GoogleFonts.amiri(
                       color: AppColors.accent,
                       fontSize: 12,
