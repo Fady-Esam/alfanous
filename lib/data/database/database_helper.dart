@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -23,6 +25,7 @@ class DatabaseHelper {
     bool dbExists = await File(path).exists();
 
     if (!dbExists) {
+      debugPrint("Creating a copy of the database from assets...");
 
       ByteData data = await rootBundle.load(join('assets', filePath));
       List<int> bytes = data.buffer.asUint8List(
@@ -31,8 +34,20 @@ class DatabaseHelper {
       );
 
       await File(path).writeAsBytes(bytes, flush: true);
-    } 
+      debugPrint("Database copied successfully!");
+    } else {
+      debugPrint("Database already exists. Opening...");
+    }
 
-    return await openDatabase(path);
+    final db = await openDatabase(path);
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS favorites (
+        gid INTEGER PRIMARY KEY,
+        added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+
+    return db;
   }
 }

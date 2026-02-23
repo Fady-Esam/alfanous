@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/aya_model.dart';
+import '../../../cubit/favorite_cubit/favorites_cubit.dart';
+import '../../../cubit/favorite_cubit/favorites_states.dart';
 import '../../../cubit/settings_cubit/settings_cubit.dart';
 import '../../../cubit/settings_cubit/settings_states.dart';
 import 'aya_badge.dart';
@@ -15,7 +17,7 @@ class CardBody extends StatelessWidget {
   final List<String> highlightTerms;
   final bool isHighlight;
 
-  const CardBody({super.key, 
+  const CardBody({
     required this.aya,
     required this.highlightTerms,
     required this.isHighlight,
@@ -30,7 +32,9 @@ class CardBody extends StatelessWidget {
         final baseFs = 20.0 * settings.fontSizeMultiplier;
 
         final baseStyle = GoogleFonts.amiri(
-          color: isHighlight ? AppColors.textPrimary : AppColors.textPrimary.withAlpha(220),
+          color: isHighlight
+              ? AppColors.textPrimary
+              : AppColors.textPrimary.withAlpha(220),
           fontSize: baseFs,
           height: 2.0,
           fontWeight: isHighlight ? FontWeight.w600 : FontWeight.w400,
@@ -56,7 +60,9 @@ class CardBody extends StatelessWidget {
             color: isHighlight ? AppColors.highlightBg : AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isHighlight ? AppColors.highlightBorder : AppColors.divider,
+              color: isHighlight
+                  ? AppColors.highlightBorder
+                  : AppColors.divider,
               width: isHighlight ? 1.5 : 0.8,
             ),
             boxShadow: isHighlight
@@ -84,13 +90,40 @@ class CardBody extends StatelessWidget {
                         'سورة ${aya.suraName ?? ''} - آية ${aya.ayaId}',
                         textDirection: TextDirection.rtl,
                         style: GoogleFonts.amiri(
-                          color: isHighlight ? AppColors.accent : AppColors.textSecondary,
+                          color: isHighlight
+                              ? AppColors.accent
+                              : AppColors.textSecondary,
                           fontSize: 14,
                           fontWeight: isHighlight
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
                       ),
+                    ),
+                    BlocBuilder<FavoritesCubit, FavoritesState>(
+                      builder: (context, favState) {
+                        final isFav = favState.isFavorite(aya.gid);
+                        return IconButton(
+                          icon: Icon(
+                            isFav
+                                ? Icons.star_rounded
+                                : Icons.star_border_rounded,
+                            color: isFav
+                                ? AppColors.accent
+                                : AppColors.textSecondary.withAlpha(150),
+                            size: 26,
+                          ),
+                          onPressed: () {
+                            context.read<FavoritesCubit>().toggleFavorite(
+                              aya.gid,
+                            );
+                          },
+                          tooltip: 'إضافة للمفضلة',
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          splashRadius: 24,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -114,8 +147,6 @@ class CardBody extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 MetaChips(aya: aya),
-
-                const SizedBox(height: 10),
               ],
             ),
           ),

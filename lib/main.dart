@@ -7,7 +7,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'data/database/database_helper.dart';
+import 'data/repositories/favorites_repository.dart';
 import 'data/repositories/quran_repository.dart';
+import 'presentation/cubit/favorite_cubit/favorites_cubit.dart';
 import 'presentation/cubit/search_cubit/search_cubit.dart';
 import 'presentation/cubit/settings_cubit/settings_cubit.dart';
 import 'presentation/pages/search_page.dart';
@@ -43,6 +45,7 @@ class AlfanousApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repo = QuranRepository(dbHelper: DatabaseHelper.instance);
+    final favRepo = FavoritesRepository(dbHelper: DatabaseHelper.instance);
 
     return MultiRepositoryProvider(
       providers: [
@@ -55,7 +58,9 @@ class AlfanousApp extends StatelessWidget {
           BlocProvider<SearchCubit>(
             create: (_) => SearchCubit(repository: repo),
           ),
-
+          BlocProvider<FavoritesCubit>(
+            create: (_) => FavoritesCubit(repository: favRepo)..loadFavorites(),
+          ),
         ],
         child: MaterialApp(
           title: 'الفانوس — البحث القرآني',
